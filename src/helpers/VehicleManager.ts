@@ -1,6 +1,6 @@
-import { VehicleDetails } from "./common/interfaces";
-import { Package } from "./Package";
-import { Vehicle } from "./Vehicle";
+import { VehicleDetails } from "../common/interfaces";
+import { Package } from "../models/Package";
+import { Vehicle } from "../models/Vehicle";
 
 export class VehicleManager {
 

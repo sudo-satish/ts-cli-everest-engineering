@@ -4,10 +4,10 @@ import { CLI } from './CLI';
 import { PackageDetailsRaw, PromptConfig, PromptConfigType, VehicleDetailsRaw } from '../common/interfaces';
 import { PackageDetailsTransformer } from '../transformers/PackageDetailsTransformer';
 import { PackageDetailValidator } from '../validators/PackageDetailValidator';
-import { Package } from '../Package';
+import { Package } from '../models/Package';
 import { VehicleDetailsTransformer } from '../transformers/VehicleDetailsTransformer';
 import { VehicleDetailValidator } from '../validators/VehicleDetailValidator';
-import { VehicleManager } from '../VehicleManager';
+import { VehicleManager } from '../helpers/VehicleManager';
 
 interface BasicCLIDetails {
   baseFare: string;

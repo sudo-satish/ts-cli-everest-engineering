@@ -4,7 +4,7 @@ import { CLI } from './CLI';
 import { PackageDetailsRaw, PromptConfig, PromptConfigType } from '../common/interfaces';
 import { PackageDetailsTransformer } from '../transformers/PackageDetailsTransformer';
 import { PackageDetailValidator } from '../validators/PackageDetailValidator';
-import { Package } from '../Package';
+import { Package } from '../models/Package';
 
 interface BasicCLIDetails {
   baseFare: string;

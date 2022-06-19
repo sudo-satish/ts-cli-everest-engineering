@@ -1,4 +1,4 @@
-import { CouponValidator } from "./validators/CouponValidator";
+import { CouponValidator } from "../validators/CouponValidator";
 
 /**
  * It calculated the cost of a given package

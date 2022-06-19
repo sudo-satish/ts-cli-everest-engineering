@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { PromptConfig } from "./common/interfaces";
+import { PromptConfig } from "../common/interfaces";
 
 /**
  * Wrapper of inquirer

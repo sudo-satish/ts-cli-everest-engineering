@@ -1,5 +1,5 @@
-import { Inquirer } from '../Inquirer';
-import { Logger } from '../Logger';
+import { Inquirer } from '../helpers/Inquirer';
+import { Logger } from '../helpers/Logger';
 
 /**
  * An interface to write CLI

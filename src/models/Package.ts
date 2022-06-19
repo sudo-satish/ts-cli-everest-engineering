@@ -1,5 +1,5 @@
-import { PackageDetails } from "./common/interfaces";
-import { CostCalculator } from "./CostCalculator";
+import { PackageDetails } from "../common/interfaces";
+import { CostCalculator } from "../helpers/CostCalculator";
 
 /**
  * A class representing a package

@@ -15,9 +15,21 @@ export interface PackageDetailsRaw {
   offerCode?: string;
 }
 
+export interface VehicleDetailsRaw {
+  noOfVehicle: string;
+  maxSpeed: string;
+  maxCarriableWeight: string;
+}
+
 export interface PackageDetails {
   packageId: string;
   packageWeight: number;
   distance: number;
   offerCode?: string;
+}
+
+export interface VehicleDetails {
+  noOfVehicle: number;
+  maxSpeed: number;
+  maxCarriableWeight: number;
 }

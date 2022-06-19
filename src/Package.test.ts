@@ -32,3 +32,15 @@ test('Package 3', () => {
   const pkg = new Package(packageDetails, 100);
   expect(pkg.toString()).toBe('PKG3 35 665');
 })
+
+test('Package 3 toStringWithTime', () => {
+  const packageDetails = {
+    packageId: 'PKG3',
+    packageWeight: 10,
+    distance: 100,
+    offerCode: 'OFR003',
+  };
+  const pkg = new Package(packageDetails, 100);
+  pkg.timeToDeliver = 10;
+  expect(pkg.toStringWithTime()).toBe('PKG3 35 665 10');
+})

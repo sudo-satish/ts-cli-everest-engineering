@@ -14,7 +14,8 @@
     "build": "tsc -p .",
     "local": "sudo npm i -g && everest",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
-    "test": "jest"
+    "test": "jest",
+    "te": "ts-node src/VehicleManager.ts"
   },
   "author": "Satish",
   "license": "ISC",

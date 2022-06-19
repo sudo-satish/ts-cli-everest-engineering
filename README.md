@@ -8,7 +8,7 @@
 npm run build
 ```
 
-### Script to run the code
+### Script to run the code for problem 1
 ```bash
 node lib/index.js --baseFare=100 --packages=3
 ```
@@ -18,6 +18,15 @@ Then when asked to enter the package details:
 PKG1 5 5 OFR001
 ```
 
+### How to run the code for problem 2
+```bash
+node lib/transportation.js --baseFare=100 --packages=5
+```
+
+## How to test?
+```bash
+npm test
+```
 
 ## How to install globally?
 ```bash

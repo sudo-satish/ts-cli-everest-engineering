@@ -11,24 +11,63 @@ interface BasicCLIDetails {
   packages: string;
 }
 
+interface CLIProps {
+  packages: string,
+  baseFare: string,
+  packageDetailsString: string[],
+}
+
 export class CostEstimationCLI extends CLI {
   validator = new PackageDetailValidator();
   transformer = new PackageDetailsTransformer();
 
   /**
-   * Entry point of CLI
+   * Get interactive props from CLI
+   * @returns 
    */
-  async start() {
+  async getPropsFromCLI(): Promise<CLIProps> {
     const {packages, baseFare} = await this.parseArgs();
     this.logger.info('* Enter packages details in following format');
     this.logger.info('pkg_id pkg_weight_in_kg distance_in_km offer_code');
 
     const promptConfig = this.getPromptConfig(+packages);
     const {packageDetails: packageDetailsString} = await this.inquirer.prompt(promptConfig);
+
+    return {
+      packages,
+      baseFare,
+      packageDetailsString
+    }
+  }
+
+  /**
+   * calculate deliver cost
+   * 
+   * @param param
+   * @returns 
+   */
+  calculateDeliveryCost({baseFare, packageDetailsString}: CLIProps): Package[] {
     const packageDetailsRaw = this.getPackageDetailsFromString(packageDetailsString);
     this.validator.validate(packageDetailsRaw);
     const packageDetails = this.transformer.transform(packageDetailsRaw);
     const packageList: Package[] = packageDetails.map((packageDetail) => new Package(packageDetail, +baseFare));
+    return packageList;
+  }
+
+  /**
+   * Entry point of CLI
+   */
+  async start() {
+    const {
+      packages,
+      baseFare,
+      packageDetailsString
+    }  = await this.getPropsFromCLI();
+    const packageList = this.calculateDeliveryCost({
+      packages,
+      baseFare,
+      packageDetailsString
+    })
     packageList.forEach((packag: Package) => this.logger.log(packag.toString()));
   }
 

@@ -15,7 +15,7 @@
     "local": "sudo npm i -g && everest",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
     "test": "jest",
-    "te": "ts-node src/transportation.ts"
+    "te": "ts-node src/timeEstimation.ts"
   },
   "author": "Satish",
   "license": "ISC",

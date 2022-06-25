@@ -30,20 +30,16 @@ export class VehicleManager {
    * @param maxLoad 
    * @returns Paired packages
    */
-  getPairs(packages: Package[], maxLoad: number): (Package[] | Package)[] {
-    let closestWeightPairs: (Package[] | Package)[] = [];
+  getPairs(packages: Package[], maxLoad: number): (Package[])[] {
+    let closestWeightPairs: (Package[])[] = [];
     let x = maxLoad;
     let arr = [...packages];
     while(arr.length) {
         const arrPk = this.getCombinations(arr, x);
         closestWeightPairs.push(arrPk);
-        if (Array.isArray(arrPk)) {
-          arrPk.forEach((pkg => {
-            arr.splice(arr.findIndex((p: Package) => p.packageDetails.packageId === pkg.packageDetails.packageId), 1);
-          }));
-        } else {
-          arr.splice(arr.findIndex((p: Package) => p.packageDetails.packageId === arrPk.packageDetails.packageId), 1);
-        }
+        arrPk.forEach((pkg => {
+          arr.splice(arr.findIndex((p: Package) => p.packageDetails.packageId === pkg.packageDetails.packageId), 1);
+        }));
     }
     return closestWeightPairs;
   }
@@ -51,18 +47,14 @@ export class VehicleManager {
   /**
    * If argument is array then return sum of weights or else return weight of single package.
    * 
-   * @param pkg [Package, Package] | Package
+   * @param pkg Package[]
    * @returns Total weight
    */
-  getPackageWeight(pkg: [Package, Package] | Package): number {
+  getPackageWeight(pkg: Package[]): number {
     let pkg1Weight = 0;
-    if (Array.isArray(pkg)) {
-      pkg.forEach(pkg => {
-        pkg1Weight += pkg.packageDetails.packageWeight
-      })
-    } else {
-      pkg1Weight = pkg.packageDetails.packageWeight;
-    }
+    pkg.forEach(pkg => {
+      pkg1Weight += pkg.packageDetails.packageWeight
+    })
     return pkg1Weight;
   }
 
@@ -73,7 +65,7 @@ export class VehicleManager {
    * @param sum 
    * @returns 
    */
-  getCombinations(packageArr: Package[], sum: number): (Package[] | Package) {
+  getCombinations(packageArr: Package[], sum: number): Package[] {
     function add(a: number, b: Package) {
       return a + b.packageDetails.packageWeight;
     };

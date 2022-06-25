@@ -14,6 +14,13 @@ interface BasicCLIDetails {
   packages: string;
 }
 
+interface CLIProps {
+  packages: string,
+  baseFare: string,
+  packageDetailsString: string[],
+  vehicleDetailsString: string
+}
+
 export class TimeEstimationCLI extends CLI {
   packageValidator = new PackageDetailValidator();
   vehicleValidator = new VehicleDetailValidator();
@@ -22,23 +29,10 @@ export class TimeEstimationCLI extends CLI {
   vehicleManager = new VehicleManager();
 
   /**
-   * Entry point of CLI
+   * Get interactive props from CLI
+   * @returns 
    */
-  async start() {
-
-    // const packages = 5;
-    // const baseFare = 100;
-
-    // const packageDetailsString = [
-    //   "PKG1 50 30 OFR001",
-    //   "PKG2 75 125 OFR008",
-    //   "PKG3 175 100 OFR003",
-    //   "PKG4 110 60 OFR002",
-    //   "PKG5 155 95 NA",
-    // ];
-    // const vehicleDetailsString = "2 70 200";
-
-
+  async getPropsFromCLI(): Promise<CLIProps> {
     const {packages, baseFare} = await this.parseArgs();
     this.logger.info('* Enter packages details in following format');
     this.logger.info('pkg_id pkg_weight_in_kg distance_in_km offer_code');
@@ -54,6 +48,20 @@ export class TimeEstimationCLI extends CLI {
       message: 'Enter vehicle details'
     }]);
 
+    return {
+      packages, baseFare, packageDetailsString, vehicleDetailsString
+    };
+  }
+
+  /**
+   * Does calculation for the packages delivery
+   * 
+   * @param param
+   * @returns array of @instance Package
+   */
+  calculateTime({
+    baseFare, packageDetailsString, vehicleDetailsString
+  }: CLIProps): Package[] {
     const packageDetailsRaw = this.getPackageDetailsFromString(packageDetailsString);
     const vehicleDetailsRaw = this.getVehicleDetailsFromString(vehicleDetailsString);
     this.packageValidator.validate(packageDetailsRaw);
@@ -62,6 +70,17 @@ export class TimeEstimationCLI extends CLI {
     const vehicleDetails = this.vehicleTransformer.transform(vehicleDetailsRaw);
     const packageList: Package[] = packageDetails.map((packageDetail) => new Package(packageDetail, +baseFare));
     this.vehicleManager.calculateTime(packageList, vehicleDetails);
+    return packageList;
+  }
+
+  /**
+   * Entry point of CLI
+   */
+  async start() {
+    const {
+      packages, baseFare, packageDetailsString, vehicleDetailsString
+    } = await this.getPropsFromCLI();
+    const packageList = this.calculateTime({packages, baseFare, packageDetailsString, vehicleDetailsString});
     packageList.forEach((packag: Package) => this.logger.log(packag.toStringWithTime()));
   }
 

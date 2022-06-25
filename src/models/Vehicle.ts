@@ -19,7 +19,7 @@ export class Vehicle {
    * 
    * @param packag Package [Package, Package] | Package
    */
-  calculateTime(packag: [Package, Package] | Package) {
+  calculateTime(packag: Package[] | Package) {
     if (Array.isArray(packag)) {
       let tempTime = this.time;
       packag

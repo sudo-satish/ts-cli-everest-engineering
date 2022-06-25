@@ -11,7 +11,7 @@ interface BasicCLIDetails {
   packages: string;
 }
 
-export class CourierServiceCLI extends CLI {
+export class CostEstimationCLI extends CLI {
   validator = new PackageDetailValidator();
   transformer = new PackageDetailsTransformer();
 

@@ -11,18 +11,16 @@ export class VehicleManager {
    */
   calculateTime(packages: Package[], vehicleDetails: VehicleDetails) {
     const {noOfVehicle, maxCarriableWeight, maxSpeed} = vehicleDetails;
-    const packagesPair = this.getPairs(packages, maxCarriableWeight).reverse();
-    const vehicles = Array(noOfVehicle).fill(0).map((_, i) => new Vehicle(i, maxSpeed, maxCarriableWeight));
-    let allPackagesDelivered = false;
+    const packagesPair = this.getPairs(packages, maxCarriableWeight);
+    const vehicles = Array(noOfVehicle)
+      .fill(0)
+      .map((_, i) => new Vehicle(i, maxSpeed, maxCarriableWeight));
     const packagesArrCloned = [...packagesPair.reverse()];
-    while(!allPackagesDelivered) {
+
+    while(packagesArrCloned.length > 0) {
       const pkg = packagesArrCloned.pop();
-      if (!pkg) {
-        allPackagesDelivered = true;
-      } else {
-        const vehicle = vehicles.sort((v1, v2) => v1.time - v2.time)[0];
-        vehicle.calculateTime(pkg);
-      }
+      const vehicle = vehicles.sort((v1, v2) => v1.time - v2.time)[0];
+      vehicle.calculateTime(pkg!);
     }
   }
 
@@ -32,30 +30,21 @@ export class VehicleManager {
    * @param maxLoad 
    * @returns Paired packages
    */
-  getPairs(packages: Package[], maxLoad: number): ([Package, Package] | Package)[] {
-    let closestWeightPairs: ([Package, Package] | Package)[] = [];
+  getPairs(packages: Package[], maxLoad: number): (Package[] | Package)[] {
+    let closestWeightPairs: (Package[] | Package)[] = [];
     let x = maxLoad;
     let arr = [...packages];
-    let mayHavePair = true;
-    while(mayHavePair) {
-        const [i, j] = this.getClosest(arr, x);
-        if (i === null) {
-          mayHavePair = false;
+    while(arr.length) {
+        const arrPk = this.getCombinations(arr, x);
+        closestWeightPairs.push(arrPk);
+        if (Array.isArray(arrPk)) {
+          arrPk.forEach((pkg => {
+            arr.splice(arr.findIndex((p: Package) => p.packageDetails.packageId === pkg.packageDetails.packageId), 1);
+          }));
         } else {
-          closestWeightPairs.push([
-            arr[+i],
-            arr[+j!]
-          ]);
-          arr.splice(+i, 1);
-          arr.splice(+j!-1, 1);
+          arr.splice(arr.findIndex((p: Package) => p.packageDetails.packageId === arrPk.packageDetails.packageId), 1);
         }
     }
-    if (arr.length > 0) {
-      closestWeightPairs = closestWeightPairs.concat(arr).sort((pkg1, pkg2) => {
-        return this.getPackageWeight(pkg1) - this.getPackageWeight(pkg2);
-      });
-    }
-
     return closestWeightPairs;
   }
 
@@ -78,31 +67,35 @@ export class VehicleManager {
   }
 
   /**
-   * Returns the closest pair to the maximum weight.
+   * Returns the combination of packages which has weight sum closest to vehicle weight.
+   * 
    * @param packageArr 
    * @param sum 
    * @returns 
    */
-  getClosest(packageArr: Package[], sum: number) {
-    let first: number | null = null, second: number | null = null;
-    let firstIndex: number | string | null = null, secondIndex: number | string | null = null;
-    let arr = packageArr.map(((packag) => packag.packageDetails.packageWeight));
-    for(let i in arr) {
-       for(let j in arr) {
-          if(i != j) {
-             let tmp = arr[i] + arr[j];
-             if(tmp <= sum && tmp > (first ?? 0) + (second ?? 0)) {
-                first = arr[i];
-                second = arr[j];
-                firstIndex = i;
-                secondIndex = j;
-             }
-          };
-       };
+  getCombinations(packageArr: Package[], sum: number): (Package[] | Package) {
+    function add(a: number, b: Package) {
+      return a + b.packageDetails.packageWeight;
     };
-    return [firstIndex, secondIndex];
-  };
+
+    function fork(i: number, t: Package[]) {
+        var r = (result[0] || []).reduce(add, 0),
+            s = t.reduce(add, 0);
+        if (i === packageArr.length || s > sum) {
+            if (s <= sum && t.length && r <= s) {
+                if (r < s) {
+                    result = [];
+                }
+                result.push(t);
+            }
+            return;
+        }
+        fork(i + 1, t.concat([packageArr[i]]));
+        fork(i + 1, t);
+    }
+
+    var result: (Package[])[] = [];
+    fork(0, []);
+    return result[0];
+  }
 }
-
-new VehicleManager();
-

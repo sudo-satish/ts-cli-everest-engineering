@@ -14,7 +14,7 @@ interface BasicCLIDetails {
   packages: string;
 }
 
-export class CourierServiceTransportCLI extends CLI {
+export class TimeEstimationCLI extends CLI {
   packageValidator = new PackageDetailValidator();
   vehicleValidator = new VehicleDetailValidator();
   packageTransformer = new PackageDetailsTransformer();
@@ -25,6 +25,20 @@ export class CourierServiceTransportCLI extends CLI {
    * Entry point of CLI
    */
   async start() {
+
+    // const packages = 5;
+    // const baseFare = 100;
+
+    // const packageDetailsString = [
+    //   "PKG1 50 30 OFR001",
+    //   "PKG2 75 125 OFR008",
+    //   "PKG3 175 100 OFR003",
+    //   "PKG4 110 60 OFR002",
+    //   "PKG5 155 95 NA",
+    // ];
+    // const vehicleDetailsString = "2 70 200";
+
+
     const {packages, baseFare} = await this.parseArgs();
     this.logger.info('* Enter packages details in following format');
     this.logger.info('pkg_id pkg_weight_in_kg distance_in_km offer_code');
@@ -39,6 +53,7 @@ export class CourierServiceTransportCLI extends CLI {
       name: 'vehicleDetails',
       message: 'Enter vehicle details'
     }]);
+
     const packageDetailsRaw = this.getPackageDetailsFromString(packageDetailsString);
     const vehicleDetailsRaw = this.getVehicleDetailsFromString(vehicleDetailsString);
     this.packageValidator.validate(packageDetailsRaw);
